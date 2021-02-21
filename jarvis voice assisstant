@@ -1,0 +1,264 @@
+ import pyttsx3  # pip install pyttsx3
+
+import datetime
+
+import speech_recognition as sr  # pip install SpeehRecognition
+
+import wikipedia  # pip install wikipedia
+
+import webbrowser
+
+import os
+
+import smtplib  # pip install smtplib
+
+import wolframalpha  # pip install wolframalpha
+
+
+
+engine = pyttsx3.init('sapi5')
+
+voices = engine.getProperty('voices')
+
+rate = engine.getProperty('rate')
+
+volume = engine.getProperty('volume')
+
+
+
+appId = 'RE3WA6-9Q3W7Q84Q9'
+
+client = wolframalpha.Client(appId)
+
+
+
+# print(voices)
+
+# print(rate)
+
+# print(volume)
+
+
+
+engine.setProperty('rate', 125)
+
+engine.setProperty('voice', voices[0].id)
+
+
+
+## Send email function
+
+# def sendEmail(to, content):
+
+#     server = smtplib.SMTP('smtp.gmail.com', 587)
+
+#     server.ehlo()
+
+#     server.starttls()
+
+#     server.login('send-email-fom-email', 'your-password')
+
+#     server.sendemail('send-email-fom-email', to, content)
+
+#     server.close()
+
+
+
+def speak(audio):
+
+    engine.say(audio)
+
+    engine.runAndWait()
+
+
+
+def wishMe():
+
+    hour = (datetime.datetime.now().hour)
+
+    if hour >= 0 and hour < 12:
+
+        speak("Good Morning")
+
+    if hour >= 12 and hour < 18:
+
+        speak("Good Afternoon")
+
+    if hour >= 18:
+
+        speak("Good Evening")
+
+
+
+def takeCommand():
+
+    r = sr.Recognizer()
+
+
+
+    # take input from icophone
+
+    with sr.Microphone() as source:
+
+        print('Listening: ')
+
+        r.pause_threshold = 1
+
+        audio = r.listen(source)
+
+
+
+    # For wav audio to text
+
+    # with sr.AudioFile(r'C:\Users\saura\OneDrive\Desktop\rahul docs\jarvis ai\small town girl.wav') as source:
+
+    #     print('Listening: ')
+
+    #     audio = r.record(source)
+
+
+
+    try:
+
+        # converting audio inputted to text
+
+        query = r.recognize_google(audio)
+
+        print(query)
+
+        speak(query)
+
+        #speak(r.recognize_google(audio))
+
+    except Exception as e:
+
+        print('Could not Understand Audio')
+
+        return "Null"
+
+
+
+    return query
+
+
+
+if __name__ == '__main__':
+
+    print(os.getcwd())
+
+    #speak("Rahul, naam toh suna he hoga")
+
+    wishMe()
+
+    #while True:
+
+    query = takeCommand().lower()
+
+
+
+    try:
+
+        appId = 'RE3WA6-9Q3W7Q84Q9'
+
+        client = wolframalpha.Client(appId)
+
+        speak('Wolframealpha is working')
+
+    except Exception:
+
+        speak('Something went wrong in accessing wolframalpha')
+
+
+
+    if 'wikipedia' in query:
+
+        speak('Searching Wikipedia...')
+
+        query = query.replace('wikipedia', '')
+
+        result = wikipedia.summary(query, sentences=2)
+
+        print(result)
+
+        speak("According to Wikipedia")
+
+        speak(result)
+
+
+
+    elif 'open google'in query:
+
+        webbrowser.open('google.com')
+
+
+
+    elif 'open youtube'in query:
+
+        webbrowser.open('youtube.com')
+
+
+
+    elif 'open stackoverflow' in query:
+
+        webbrowser.open('stackoverflow.com')
+
+
+
+    elif 'play music' in query:
+
+        musicDir = r'C:\Users\saura\OneDrive\Desktop\rahul docs\pythonProjects\jarvis ai\songs'
+
+        songs = os.listdir(musicDir)
+
+        os.startfile(os.path.join(musicDir, songs[0]))
+
+
+
+    elif 'time' in query:
+
+        time = datetime.datetime.now().strftime('%H hour : %M minutes: %S seconds')
+
+        print(time)
+
+        speak(time)
+
+
+
+    elif 'capital of india' in query:
+
+        res = client.query(query) #response from wolframalpha
+
+        #next(res.results).textanswer = next(res.results).text #includes only text from response
+
+        try:
+
+            print(next(res.results, None).text)
+
+            speak(next(res.results, None).text)
+
+        except Exception as e:
+
+            print(e)
+
+
+
+    ## email to rahul
+
+    # elif 'email to rahul' in query:
+
+    #     try:
+
+    #         speak('Say your Message')
+
+    #         content = takeCommand()
+
+    #         to = 'sen-email-to-email'
+
+    #         sendEmail(to, content)
+
+    #         speak('Sir, Email Sent, Congo')
+
+    #     except Exception as e:
+
+    #         speak('Sorry Sir, Email not Sent, Try Again')
+
