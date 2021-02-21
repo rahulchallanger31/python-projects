@@ -1,0 +1,50 @@
+ import math
+
+import unittest
+
+
+
+def is_prime(n):
+
+    if n < 2:
+
+        return False
+
+    for i in range(2, int(math.sqrt(n)) + 1):
+
+        if n % i == 0:
+
+            return False
+
+    return True
+
+
+
+# Unit testing
+
+class Tests(unittest.TestCase):
+
+
+
+    def test1(self):
+
+        self.assertFalse(is_prime(1))
+
+    def test2(self):
+
+        self.assertTrue(is_prime(11))
+
+    def test3(self):
+
+        self.assertFalse(is_prime(25))
+
+    def test4(self):
+
+        self.assertTrue(is_prime(31))
+
+
+
+if __name__ == '__main__':
+
+    unittest.main()
+
