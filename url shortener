@@ -1,0 +1,24 @@
+ import pyshorteners  # pip install pyshorteners
+
+
+
+# taking url input
+
+url = input('Enter URL here: ')
+
+
+
+# reating pyshorteners object
+
+shortener = pyshorteners.Shortener()
+
+
+
+# shortening the inputted url
+
+shortUrl = shortener.tinyurl.short(url)
+
+
+
+print(shortUrl)
+
